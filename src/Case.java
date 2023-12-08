@@ -26,11 +26,11 @@ public class Case {
 	public String toString() {
 		
 		if (e instanceof Chat) {
-			return e.nom + " ";
+			return " " + e.getNom() + " ";
 		}
 		
 		else if (e instanceof Tour) {
-			return e.nom + " ";
+			return " " + e.getNom() + " ";
 		}
 		
 		else {

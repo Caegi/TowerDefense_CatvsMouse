@@ -1,43 +1,32 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-	
-	public static void main(String[] args) {
-		
-		
-		
-		Plateau Niveau1 = new Plateau(5,5);
-		Niveau1.genereChat();
+    
+    public static void main(String[] args) {
+    	int vitesseGenChats = 30000;
+    	int argent = 50; // argent au début de la partie
+    	int hauteur = 5;
+    	int largeur = 5;
+    	int vitesseGenArgent = 20000;
+    	
+        Plateau Niveau1 = new Plateau(hauteur, largeur, vitesseGenChats, argent, vitesseGenArgent);
+        Niveau1.genereChatContinu();
+        Niveau1.genereArgentContinu();
 
-		
-		Niveau1.afficheTout();
-		
-		try (Scanner myObj = new Scanner(System.in)) {
-			System.out.println("Mettre Tour ? (oui/non)");
+        try (Scanner myObj = new Scanner(System.in)) {
+            boolean createTower = true;
 
-			String reponse = myObj.nextLine();  // lecture de l'input du user
-			
-			if (reponse.equals("oui")) {
-				
-				System.out.println("Position x ? (de 1 à " + Niveau1.getLargeur() + ")");
-				int posX = myObj.nextInt() - 1;
-				System.out.println("Position y ? (de 1 à " + Niveau1.getLargeur() + ")");
-				int posY = myObj.nextInt() - 1;
-				Niveau1.ajouteTour(posX, posY);
-			}
-		}
-		
-		Niveau1.afficheTout();
-		
-		for (ArrayList<Integer> lCoordChat : Niveau1.lCoordChats) {
-			int posX = lCoordChat.get(0);
-			int posY = lCoordChat.get(1);
-			Entite chat = Niveau1.cases[posX][posY].getEntite();
-			chat.attaque(Niveau1) ;
-		}
-		
-	
-	}
-	
+            while (createTower) {  // boucle infinie pour creer tour pour l'instant 
+               	System.out.println("\nMettre une tour (coût 50) \nposition x ? (de 1 à " + Niveau1.getLargeur() + "):");
+                int posX = myObj.nextInt() - 1;
+
+                System.out.println("\nposition y ? (de 1 à " + Niveau1.getLargeur() + "):");
+                int posY = myObj.nextInt() - 1;
+                myObj.nextLine();
+
+                Niveau1.ajouteTour(posX, posY);
+                Niveau1.afficheTout(); // essaye de afficher que toutes 2 segondes au lieu d'afficher tout le temps, peut être effacer avant d'afficher 
+            }
+        }
+    }
 }

@@ -1,68 +1,78 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 
 public class Plateau {
 
-	Case [][] cases; // ok ?
+	private Case [][] cases;
 	private int largeur;
 	private int hauteur;
+	private int vitesseGenChat;
+	private int argent;
+	private int vitesseGenArgent;
 	
-	// lCoordChats: liste[liste[posX, posY]]
-	LinkedList<ArrayList<Integer>> lCoordChats = new LinkedList<ArrayList<Integer>>(); 
-	
-	public Plateau(int largeur, int hauteur) {
-		this.cases = new Case [hauteur][largeur];
-		this.setLargeur(largeur);
+	public Plateau(int largeur, int hauteur, int vitesseGenChat, int argent, int vitesseGenArgent) {
+		this.setCases(new Case [hauteur+1][largeur]);
+		this.largeur = largeur;
 		this.hauteur = hauteur;
+		this.vitesseGenChat = vitesseGenChat;
+		this.argent = argent;
+		this.vitesseGenArgent = vitesseGenArgent;
+	}
+	
+	public void remplirCasesVides() {
+		for (int iRow = 0; iRow<this.getLargeur(); iRow++){
+			System.out.println("");
+			
+			// itérer sur les colonnes du plateau
+			for (int iCol = 0; iCol<this.getHauteur(); iCol++){
+				getCases()[iRow][iCol] = new Case(null);
+			}
+			
+		}
 	}
 	
 	public void ajouteTour(int posX, int posY) {
-
-		// trouver le chiffre du nom de la nouvelle Tour en comptant le nombre de tours dans le plateau
-		Integer chiffreNom = 1;
-		for (int iRow = 0; iRow<this.getLargeur(); iRow++){
-			for (int iCol = 0; iCol<this.hauteur; iCol++){
-				if ( (cases[iRow][iCol] != null) && (cases[iRow][iCol].getEntite() instanceof Tour) ) {
-					chiffreNom++;
-				}
-			}
-			
+		
+		int pV = 70;
+		int aT = 20;
+		int vitesseAT = 6000;
+		int cout = 50;
+		Tour tour = new Tour(pV, aT, posX, posY, "T", vitesseAT, cout);
+		
+		if ((getCases()[posX][posY] == null) && (tour.getCout() <= this.argent) ) {
+			getCases()[posX][posY] = new Case(tour);
+			Tour tourCree = (Tour) getCases()[posX][posY].getEntite();
+			tourCree.attaqueContinu(this);
+			this.argent = this.argent - tour.getCout();
 		}
-	
-		Tour catapulte = new Tour(70, 20, 2, 2, 2000, ("T" + chiffreNom) );
-		if (cases[posX][posY] == null) {
-			cases[posX][posY] = new Case(catapulte);
+		else if ((getCases()[posX][posY] != null)) { // s'il y a une entite dans la case
+			System.out.println("Impossible, il y a " + getCases()[posX][posY].getEntite().getNom() + " dans la case");
 		}
-		else {
-			System.out.println("Impossible, il y a " + cases[posX][posY].getEntite().nom + " dans la case");
+		else { // si le joueur n'a pas assez d'argent pour acheter la tour
+			System.out.println("Vous êtes trop pauvre");
 		}
 	}
 	
-	public void genereChat() {
-		boolean rangeePasRemplie = ( (this.cases[0][0] == null) || (this.cases[0][1] == null) || (this.cases[0][2] == null) || (this.cases[0][3] == null) || (this.cases[0][4] == null));
+	private void genereChat() {
+		boolean rangeePasRemplie = ( (this.getCases()[0][0] == null) || (this.getCases()[0][1] == null) || (this.getCases()[0][2] == null) || (this.getCases()[0][3] == null) || (this.getCases()[0][4] == null));
 		if (rangeePasRemplie) { // s'il y a une case vide dans la première rangée
-			
-			// trouver le chiffre du nom du nouveau Chat
-			String chiffreNom = "1";
-			if ( !(this.lCoordChats.isEmpty()) ) {
-				int posX = lCoordChats.getLast().get(0); // coordonée du dernier element de lCoordChats, qui est une arraylist[posX, posY] 
-				int posY = lCoordChats.getLast().get(1); 
-				chiffreNom = cases[posX][posY].getEntite().nom.substring(1); // le nom du chat est de la forme "Cn" (n:int), et on récupère n on trouvant la substring
-				chiffreNom = String.valueOf(Integer.valueOf(chiffreNom) + 1); // ajoute 1 au chiffre du dernier chat ajouté à lCoordChats	
-			}
 			
 			// le mettre dans une des 5 sources de chat
 			Random rand = new Random();
 			int posY = rand.nextInt(5);
 			int posX = 0;
-			if (this.cases[posX][posY] == null) { 
-				Chat chat = new Chat(100, 15, posX, posY, 5000, ("C" + chiffreNom)); 
-				this.cases [0][posY] = new Case(chat);
-				ArrayList<Integer> lCoordChat = new ArrayList<Integer>();
-				lCoordChat.add(posX); // garder en mémoire les coordonées des chats pour ne pas avoir à parcourir le plateau pour les trouver
-				lCoordChat.add(posY);
-				this.lCoordChats.add(lCoordChat);
+			int vitesseAT = 2500; // 1000 = 1 segonde
+			int vitesseDL = 6000; // 1000 = 1 segonde
+			
+			if (this.getCases()[posX][posY] == null) { 
+				Chat chat = new Chat(100, 15, posX, posY, vitesseAT, ("C"), vitesseDL); 
+				this.getCases() [0][posY] = new Case(chat);	
+				
+				Chat chatDansPlateau = (Chat) this.getCases() [0][posY].getEntite();
+				Plateau p_ref = this; // pour que la plateau soit visible dans deplaceContinu
+				this.afficheTout();
+				
+				chatDansPlateau.attaqueContinu(p_ref); // le nouveau chat crée attaque et se déplace continuellement, s'il peut, à partir du moment où il a été crée
+				chatDansPlateau.deplaceContinu(p_ref); 
 			}
 			else { // s'il y avait déja une entité sur la case, essayer une autre
 				this.genereChat();
@@ -70,15 +80,29 @@ public class Plateau {
 		}
 	}
 	
+	public void genereChatContinu() {
+		
+		Plateau ref_p = this; // pour que la ref du plateau soit visible dans la classe anonyme Timer
+		new java.util.Timer().scheduleAtFixedRate( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	ref_p.genereChat();
+		            }
+		        }, 
+		        1000, vitesseGenChat 
+		);
+	}
+	
 	public void afficheTout() {
 		// itérer sur les rangées du plateau
+		System.out.println("\n Argent: " + this.argent);
 		for (int iRow = 0; iRow<this.getLargeur(); iRow++){
-			System.out.println("");
-			
+			System.out.println();
 			// itérer sur les colonnes du plateau
-			for (int iCol = 0; iCol<this.hauteur; iCol++){
-				if (cases[iRow][iCol] != null) {
-					System.out.print( cases[iRow][iCol].toString() );
+			for (int iCol = 0; iCol<this.getHauteur(); iCol++){
+				if (getCases()[iRow][iCol] != null) {
+					System.out.print( getCases()[iRow][iCol].toString() );
 				}
 				else {
 					System.out.print(" . ");
@@ -89,6 +113,40 @@ public class Plateau {
 		System.out.print(" \n      /\\ \n     /  \\\n    /----\\\n   / |  | \\\n   | |  | |"); // affiche la maison de souris
 		System.out.println("\n");
 	}
+	
+	private void genereArgent() {
+		this.argent = this.argent + 50;
+	}
+	
+	public void genereArgentContinu() {
+		
+		Plateau ref_p = this; // pour que la ref du plateau soit visible dans la classe anonyme Timer
+		new java.util.Timer().scheduleAtFixedRate( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	ref_p.genereArgent();
+		            }
+		        }, 
+		        vitesseGenArgent, vitesseGenArgent  
+		);
+	
+	}
+	
+	public void afficheContinu() {
+		
+		Plateau ref_p = this; // pour que la ref du plateau soit visible dans la classe anonyme Timer
+		new java.util.Timer().scheduleAtFixedRate( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	ref_p.genereArgent();
+		            }
+		        }, 
+		        100, 1000  
+		);
+	
+	}
 
 	public int getLargeur() {
 		return largeur;
@@ -96,6 +154,22 @@ public class Plateau {
 
 	public void setLargeur(int largeur) {
 		this.largeur = largeur;
+	}
+
+	public int getHauteur() {
+		return hauteur;
+	}
+
+	public void setHauteur(int hauteur) {
+		this.hauteur = hauteur;
+	}
+
+	public Case [][] getCases() {
+		return cases;
+	}
+
+	public void setCases(Case [][] cases) {
+		this.cases = cases;
 	}
 	
 }

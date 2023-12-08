@@ -1,13 +1,67 @@
 
 public class Tour extends Entite {
 
-	public Tour(int pV, int aT, int posX, int posY, int vitesseAT, String nom) {
+	private int cout;
+
+	public Tour(int pV, int aT, int posX, int posY, String nom, int vitesseAT, int cout) {
 		super(pV, aT, posX, posY, nom, vitesseAT);
+		this.cout = cout;
 	}
 
 	@Override
 	public void attaque(Plateau p) {
+		// itérer sur les rangées du plateau
+		if (p.getCases()[this.getPosX()][this.getPosY()] != null) { // si Tour pas détruite
+			for (int iRow = this.getPosX()-1; iRow>=0; iRow--){
+				Case cible = p.getCases() [iRow][this.getPosY()];
+				int pVChat = 0;
+				
+		    	if ( (cible != null) && (cible.getEntite() instanceof Chat) ) {
+		    		Entite entiteCible = cible.getEntite();
+		    		pVChat = entiteCible.getpV();
+					int nPV = pVChat - this.getAT();
+					
+					if (nPV > 0 ){
+						entiteCible.setpV(nPV);
+		    			System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
+		    					+ "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
+					}
+					else { // si Chat meurt
+						System.out.println(entiteCible.getNom() + " a été détruit \n" );
+						cible.enleverEntite();
+						p.getCases() [iRow][this.getPosY()] = null; // actualiser cases
+						p.afficheTout();
+					}
+					break;
+		    	}
+			}
+		}
+	}		
+	
+	public void attaqueContinu(Plateau p_ref) {
+		int vitesseAT = this.getVitesseAT();
+		Tour tour = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
 		
+		new java.util.Timer().scheduleAtFixedRate( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	if (p_ref.getCases()[tour.getPosX()][tour.getPosY()] == null) {
+		            		cancel();
+		            	}
+		            	tour.attaque(p_ref);
+		            }
+		        }, 
+		        1000, vitesseAT 
+		);
+	}
+
+	public int getCout() {
+		return cout;
+	}
+
+	public void setCout(int cout) {
+		this.cout = cout;
 	}
 	
 }
