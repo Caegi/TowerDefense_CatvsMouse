@@ -140,10 +140,10 @@ public class Plateau {
 		        new java.util.TimerTask() {
 		            @Override
 		            public void run() {
-		            	ref_p.genereArgent();
+		            	ref_p.afficheTout();
 		            }
 		        }, 
-		        100, 1000  
+		        100, 3000  // affiche le plateau toutes les 3 segondes
 		);
 	
 	}

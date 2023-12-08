@@ -29,7 +29,6 @@ public class Chat extends Entite implements Cloneable {
 						System.out.println(entiteCible.getNom() + " a été détruit \n" );
 						cible.enleverEntite();
 						p.getCases() [this.getPosX() + 1][this.getPosY()]= null; // pour que le deplacement se fasse sans probleme apres la tour meure, etre sûr que la case soit nulle  
-						p.afficheTout();
 					}
 		    	}
 			}
@@ -79,7 +78,6 @@ public class Chat extends Entite implements Cloneable {
 					p.getCases() [this.getPosX() + 1][getPosY()] = new Case(chatClone);
 				    p.getCases() [this.getPosX()][getPosY()].enleverEntite(); // enlever chat de la case où le chat se trouvait
 				    this.setPosX(this.getPosX() + 1); // actualiser la posX de this pour que le prochain deplacement marche
-				    p.afficheTout();
 				}
 			}
 		}	

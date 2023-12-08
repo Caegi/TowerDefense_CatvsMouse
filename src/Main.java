@@ -12,6 +12,7 @@ public class Main {
         Plateau Niveau1 = new Plateau(hauteur, largeur, vitesseGenChats, argent, vitesseGenArgent);
         Niveau1.genereChatContinu();
         Niveau1.genereArgentContinu();
+        Niveau1.afficheContinu();
 
         try (Scanner myObj = new Scanner(System.in)) {
             boolean createTower = true;

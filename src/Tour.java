@@ -30,7 +30,6 @@ public class Tour extends Entite {
 						System.out.println(entiteCible.getNom() + " a été détruit \n" );
 						cible.enleverEntite();
 						p.getCases() [iRow][this.getPosY()] = null; // actualiser cases
-						p.afficheTout();
 					}
 					break;
 		    	}
