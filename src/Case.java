@@ -15,14 +15,6 @@ public class Case {
 		this.e = e;
 	}
 	
-	public boolean estVide() {
-		return !(this.e == null); 
-	}
-	
-	public void enleverEntite() {
-		this.e = null;
-	}
-	
 	public String toString() {
 		
 		if (e instanceof Chat) {

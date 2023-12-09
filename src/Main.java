@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
     
     public static void main(String[] args) {
-    	int vitesseGenChats = 30000;
+    	int vitesseGenChats = 25000;
     	int argent = 50; // argent au début de la partie
     	int hauteur = 5;
     	int largeur = 5;

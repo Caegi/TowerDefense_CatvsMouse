@@ -15,20 +15,17 @@ public class Tour extends Entite {
 			for (int iRow = this.getPosX()-1; iRow>=0; iRow--){
 				Case cible = p.getCases() [iRow][this.getPosY()];
 				int pVChat = 0;
-				
 		    	if ( (cible != null) && (cible.getEntite() instanceof Chat) ) {
 		    		Entite entiteCible = cible.getEntite();
 		    		pVChat = entiteCible.getpV();
 					int nPV = pVChat - this.getAT();
-					
 					if (nPV > 0 ){
 						entiteCible.setpV(nPV);
-		    			System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
-		    					+ "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
+		    			// System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
+		    					// + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
 					}
 					else { // si Chat meurt
-						System.out.println(entiteCible.getNom() + " a été détruit \n" );
-						cible.enleverEntite();
+						System.out.println(entiteCible.getNom() + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + ") a été détruit \n" );
 						p.getCases() [iRow][this.getPosY()] = null; // actualiser cases
 					}
 					break;
@@ -40,7 +37,6 @@ public class Tour extends Entite {
 	public void attaqueContinu(Plateau p_ref) {
 		int vitesseAT = this.getVitesseAT();
 		Tour tour = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
-		
 		new java.util.Timer().scheduleAtFixedRate( 
 		        new java.util.TimerTask() {
 		            @Override
