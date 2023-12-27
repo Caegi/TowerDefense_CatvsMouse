@@ -14,7 +14,7 @@ public class Plateau {
 		this.largeur = largeur;
 		this.hauteur = hauteur;
 		this.vitesseGenChat = vitesseGenChat;
-		this.argent = argent;
+		this.setArgent(argent);
 		this.vitesseGenArgent = vitesseGenArgent;
 	}
 	
@@ -24,11 +24,11 @@ public class Plateau {
 		int vitesseAT = 6000;
 		int cout = 50;
 		Tour tour = new Tour(pV, aT, posX, posY, "T", vitesseAT, cout);
-		if ( (this.caseEstVide(posX, posY)) && (tour.getCout() <= this.argent) ) {
+		if ( (this.caseEstVide(posX, posY)) && (tour.getCout() <= this.getArgent()) ) {
 			getCases()[posX][posY] = new Case(tour);
 			Tour tourCree = (Tour) getCases()[posX][posY].getEntite();
 			tourCree.attaqueContinu(this);
-			this.argent = this.argent - tour.getCout();
+			this.setArgent(this.getArgent() - tour.getCout());
 		}
 		else if ( !(this.caseEstVide(posX, posY)) ) { // s'il y a une entite dans la case
 			System.out.println("Impossible, il y a " + getCases()[posX][posY].getEntite().getNom() + " dans la case");
@@ -69,7 +69,7 @@ public class Plateau {
 	
 	public void afficheTout() {
 		// itérer sur les rangées du plateau
-		System.out.println("\n Argent: " + this.argent);
+		System.out.println("\n Argent: " + this.getArgent());
 		for (int iRow = 0; iRow<this.getLargeur(); iRow++){
 			System.out.println();
 			// itérer sur les colonnes du plateau
@@ -87,7 +87,7 @@ public class Plateau {
 	}
 	
 	private void genereArgent() {
-		this.argent = this.argent + 50;
+		this.setArgent(this.getArgent() + 50);
 	}
 	
 	public void genereArgentContinu() {
@@ -148,6 +148,14 @@ public class Plateau {
 
 	public void setCases(Case [][] cases) {
 		this.cases = cases;
+	}
+
+	public int getArgent() {
+		return argent;
+	}
+
+	public void setArgent(int argent) {
+		this.argent = argent;
 	}
 	
 }

@@ -10,15 +10,16 @@ public class Main {
     	int vitesseGenArgent = 20000;
     	
         Plateau Niveau1 = new Plateau(hauteur, largeur, vitesseGenChats, argent, vitesseGenArgent);
+        AffichageConsole A = new AffichageConsole(1500);
         Niveau1.genereChatContinu();
         Niveau1.genereArgentContinu();
-        Niveau1.afficheContinu();
+        A.afficheContinu(Niveau1);
 
         try (Scanner myObj = new Scanner(System.in)) {
             boolean createTower = true;
 
             while (createTower) {  // boucle infinie pour creer tour pour l'instant 
-               	System.out.println("\nMettre une tour (coût 50) \nposition x ? (de 1 à " + Niveau1.getLargeur() + "):");
+               	System.out.println("\nMettre une tour (coût 50) \nposition x ? (de 2 à " + Niveau1.getLargeur() + "):"); // creer tour position x=1 pas encore traite
                 int posX = myObj.nextInt() - 1;
 
                 System.out.println("\nposition y ? (de 1 à " + Niveau1.getLargeur() + "):");
@@ -26,7 +27,6 @@ public class Main {
                 myObj.nextLine();
 
                 Niveau1.ajouteTour(posX, posY);
-                Niveau1.afficheTout(); // essaye de afficher que toutes 2 segondes au lieu d'afficher tout le temps, peut être effacer avant d'afficher 
             }
         }
     }
