@@ -12,7 +12,7 @@ public class Chat extends Entite implements Cloneable {
 	@Override
 	// le chat attaque continuellent, s'il y a une tour devant lui
 	public void attaque(Plateau p) { 
-		if ( !(p.caseEstVide( this.getPosX(), this.getPosY() )) ) { // si Chat pas détruit
+		if (p.getCases()[this.getPosX()][this.getPosY()] != null) { // si Chat pas détruit
 			if ((this.getPosX() + 1) < p.getHauteur()) {
 				Case cible = p.getCases() [this.getPosX() + 1] [this.getPosY()];
 		    	if ( (cible != null) && (cible.getEntite() instanceof Tour) ) { // s'il y a une tour devant le chat
@@ -20,8 +20,8 @@ public class Chat extends Entite implements Cloneable {
 					int nPV = entiteCible.getpV() - this.getAT();
 					if (nPV > 0 ){
 						entiteCible.setpV(nPV);
-						// System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
-    					// + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
+						System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
+    					 + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
 					}
 					else { // si Tour meurt
 						System.out.println(entiteCible.getNom() + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + ") a été détruit \n" );
@@ -39,7 +39,11 @@ public class Chat extends Entite implements Cloneable {
 		        new java.util.TimerTask() {
 		            @Override
 		            public void run() {
-		            	if (chatQuiAT.getPosX() == p_ref.getHauteur()-1) { // s'il est dans la dernière rangée visible du plateau
+		            	// s'il est dans la dernière rangée visible du plateau
+		            	// ou s'il a ete detruit
+		            	// -> arreter d'attaquer
+		            	if ( (chatQuiAT.getPosX() == p_ref.getHauteur()-1) ||
+		            			(p_ref.getCases()[chatQuiAT.getPosX()][chatQuiAT.getPosY()] == null)) { 
 							cancel();
 						}
 		            	chatQuiAT.attaque(p_ref);
@@ -60,7 +64,7 @@ public class Chat extends Entite implements Cloneable {
 	}
 		
 	private void deplace(Plateau p) {
-		if ( !(p.caseEstVide( this.getPosX(), this.getPosY() )) ){ // si Chat pas détruit
+		if ( !(p.caseEstVide( this.getPosX(), this.getPosY()) ) ) { // si Chat pas détruit
 			Chat chat = (Chat) p.getCases()[this.getPosX()][this.getPosY()].getEntite(); // l'objet courant n'est pas forcément l'object contenu dans la case (il a pu prende des degats)
 			Chat chatClone = chat.clone();
 			if (this.getPosX() + 1 <= p.getHauteur()) { 
@@ -72,7 +76,8 @@ public class Chat extends Entite implements Cloneable {
 				    this.setPosX(this.getPosX() + 1); // actualiser la posX de this pour que le prochain deplacement marche
 				}
 			}
-		}	
+		}
+		
 	}	
 	
 	public void deplaceContinu(Plateau p) {
@@ -84,7 +89,11 @@ public class Chat extends Entite implements Cloneable {
 		        new java.util.TimerTask() {
 		            @Override
 		            public void run() {
-						if ( (chatDansPlateau.getPosX() == 5) ) { // s'il est dans la dernière rangée du plateau
+		            	// s'il est dans la dernière rangée du plateau (elle n'est pas visible par le joueur)
+		              	// ou s'il a ete detruit
+		            	// -> arreter de se deplacer
+						if ( (chatDansPlateau.getPosX() == 5) || 
+								(p.getCases()[chatDansPlateau.getPosX()][chatDansPlateau.getPosY()] == null) ) { 
 							cancel();
 						}
 		            	chatDansPlateau.deplace(p);

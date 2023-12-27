@@ -113,7 +113,7 @@ public class Plateau {
 		            	ref_p.afficheTout();
 		            }
 		        }, 
-		        100, 3000  // affiche le plateau toutes les 3 segondes
+		        100, 1500  // affiche le plateau toutes les segondes
 		);
 	
 	}

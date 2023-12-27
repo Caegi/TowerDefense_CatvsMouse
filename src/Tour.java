@@ -10,8 +10,8 @@ public class Tour extends Entite {
 
 	@Override
 	public void attaque(Plateau p) {
-		// itérer sur les rangées du plateau
 		if (p.getCases()[this.getPosX()][this.getPosY()] != null) { // si Tour pas détruite
+			// itérer sur les rangées du plateau
 			for (int iRow = this.getPosX()-1; iRow>=0; iRow--){
 				Case cible = p.getCases() [iRow][this.getPosY()];
 				int pVChat = 0;
@@ -21,12 +21,12 @@ public class Tour extends Entite {
 					int nPV = pVChat - this.getAT();
 					if (nPV > 0 ){
 						entiteCible.setpV(nPV);
-		    			// System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
-		    					// + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
+		    			System.out.println(this.getNom() + "(x" + (this.getPosX()+1) + "|y" + (this.getPosY()+1) +") attaque -> PV de " + entiteCible.getNom() 
+		    					 + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + "): " + nPV);
 					}
 					else { // si Chat meurt
 						System.out.println(entiteCible.getNom() + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + ") a été détruit \n" );
-						p.getCases() [iRow][this.getPosY()] = null; // actualiser cases
+						p.viderCase(iRow, this.getPosY());; // actualiser cases
 					}
 					break;
 		    	}
