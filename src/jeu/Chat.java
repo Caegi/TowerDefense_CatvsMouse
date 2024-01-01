@@ -1,3 +1,4 @@
+package jeu;
 
 public class Chat extends Entite implements Cloneable {
 	 
@@ -64,16 +65,25 @@ public class Chat extends Entite implements Cloneable {
 	}
 		
 	private void deplace(Plateau p) {
-		if ( !(p.caseEstVide( this.getPosX(), this.getPosY()) ) ) { // si Chat pas détruit
+		if ( !(p.caseEstVide( this.getPosX(), this.getPosY()) ) && ( p.getCases()[this.getPosX()][this.getPosY()]).getEntite() instanceof Chat) { // si Chat pas détruit
 			Chat chat = (Chat) p.getCases()[this.getPosX()][this.getPosY()].getEntite(); // l'objet courant n'est pas forcément l'object contenu dans la case (il a pu prende des degats)
 			Chat chatClone = chat.clone();
-			if (this.getPosX() + 1 <= p.getHauteur()) { 
+			if (this.getPosX() + 1 < p.getHauteur()) { 
 				Case cible = p.getCases()[chatClone.getPosX()+1][chatClone.getPosY()];
 				if ((cible == null))  {
 					chatClone.setPosX(getPosX() + 1);
-					p.getCases() [this.getPosX() + 1][getPosY()] = new Case(chatClone);
-				    p.getCases() [this.getPosX()][this.getPosY()] = null;
+					p.getCases() [this.getPosX() + 1][getPosY()] = new Case(chatClone); // ajouter clone du chat dans la cible
+				    p.viderCase(this.getPosX(), this.getPosY());
 				    this.setPosX(this.getPosX() + 1); // actualiser la posX de this pour que le prochain deplacement marche
+				}
+			}
+			else if (this.getPosX() + 1 == p.getHauteur()) {
+				// si le jeu n'est pas termine
+				if ( !(p.isGameOver()) ) {
+					// enlever chat
+					p.viderCase(this.getPosX(), this.getPosY());
+					// enlever 20 % de PV de la maison
+					p.setPvMaison(p.getPvMaison() - 20);
 				}
 			}
 		}
@@ -92,7 +102,7 @@ public class Chat extends Entite implements Cloneable {
 		            	// s'il est dans la dernière rangée du plateau (elle n'est pas visible par le joueur)
 		              	// ou s'il a ete detruit
 		            	// -> arreter de se deplacer
-						if ( (chatDansPlateau.getPosX() == 5) || 
+						if ( (chatDansPlateau.getPosX() == p.getHauteur()) || 
 								(p.getCases()[chatDansPlateau.getPosX()][chatDansPlateau.getPosY()] == null) ) { 
 							cancel();
 						}

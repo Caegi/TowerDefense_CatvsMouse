@@ -1,3 +1,5 @@
+package jeu;
+
 import java.util.Random;
 
 public class Plateau {
@@ -8,13 +10,14 @@ public class Plateau {
 	private int vitesseGenChat;
 	private int argent;
 	private int vitesseGenArgent;
+	private int pvMaison = 100; // la maison indique les points de pv du joueur, si ca tombe a 0, le joeur perd (initialise a 100%)
 	
 	public Plateau(int largeur, int hauteur, int vitesseGenChat, int argent, int vitesseGenArgent) {
-		this.setCases(new Case [hauteur+1][largeur]);
+		this.cases = new Case [hauteur][largeur];
 		this.largeur = largeur;
 		this.hauteur = hauteur;
 		this.vitesseGenChat = vitesseGenChat;
-		this.setArgent(argent);
+		this.argent = argent;
 		this.vitesseGenArgent = vitesseGenArgent;
 	}
 	
@@ -63,27 +66,8 @@ public class Plateau {
 		            	ref_p.genereChat();
 		            }
 		        }, 
-		        1000, vitesseGenChat 
+		        3000, vitesseGenChat 
 		);
-	}
-	
-	public void afficheTout() {
-		// itérer sur les rangées du plateau
-		System.out.println("\n Argent: " + this.getArgent());
-		for (int iRow = 0; iRow<this.getLargeur(); iRow++){
-			System.out.println();
-			// itérer sur les colonnes du plateau
-			for (int iCol = 0; iCol<this.getHauteur(); iCol++){
-				if ( !(this.caseEstVide(iRow, iCol)) ) {
-					System.out.print( getCases()[iRow][iCol].toString() );
-				}
-				else {
-					System.out.print(" . ");
-				}
-			}
-		}
-		System.out.print(" \n      /\\ \n     /  \\\n    /----\\\n   / |  | \\\n   | |  | |"); // affiche la maison de souris
-		System.out.println("\n");
 	}
 	
 	private void genereArgent() {
@@ -100,20 +84,6 @@ public class Plateau {
 		            }
 		        }, 
 		        vitesseGenArgent, vitesseGenArgent  
-		);
-	
-	}
-	
-	public void afficheContinu() {
-		Plateau ref_p = this; // pour que la ref du plateau soit visible dans la classe anonyme Timer
-		new java.util.Timer().scheduleAtFixedRate( 
-		        new java.util.TimerTask() {
-		            @Override
-		            public void run() {
-		            	ref_p.afficheTout();
-		            }
-		        }, 
-		        100, 1500  // affiche le plateau toutes les segondes
 		);
 	
 	}
@@ -157,5 +127,18 @@ public class Plateau {
 	public void setArgent(int argent) {
 		this.argent = argent;
 	}
+
+	public int getPvMaison() {
+		return pvMaison;
+	}
+
+	public void setPvMaison(int pvMaison) {
+		this.pvMaison = pvMaison;
+	}
+
+	public boolean isGameOver() {
+		return (this.getPvMaison() <= 0);
+	}
+
 	
 }

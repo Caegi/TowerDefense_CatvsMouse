@@ -1,3 +1,4 @@
+package jeu;
 
 public class Tour extends Entite {
 
@@ -26,9 +27,9 @@ public class Tour extends Entite {
 					}
 					else { // si Chat meurt
 						System.out.println(entiteCible.getNom() + "(x" + (entiteCible.getPosX()+1) + "|y" + (entiteCible.getPosY()+1) + ") a été détruit \n" );
-						p.viderCase(iRow, this.getPosY());; // actualiser cases
+						p.viderCase(iRow, this.getPosY()); // actualiser cases
 					}
-					break;
+					break; // pour que la tour attaque que le premier chat qu'il trouve
 		    	}
 			}
 		}

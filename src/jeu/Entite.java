@@ -1,3 +1,4 @@
+package jeu;
 
 public abstract class Entite {
 	
@@ -6,7 +7,7 @@ public abstract class Entite {
 	private int posX;
 	private int posY;
 	private String nom;
-	private int vitesseAT; // bien que ça soit protected ?
+	private int vitesseAT;
 	
 	public Entite(int pV, int aT, int posX, int posY, String nom, int vitesseAT) {
 		this.setpV(pV);
