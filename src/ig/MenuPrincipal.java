@@ -21,7 +21,7 @@ public class MenuPrincipal {
         boutonCommencer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // action à exécuter quand "Commencer" est cliqué
-                MenuNiveau menuNiveau = new MenuNiveau();
+                MenuNiveau menuNiveau = new MenuNiveau(frame);
                 menuNiveau.faireMenu();
                 frame.setVisible(false);
             }

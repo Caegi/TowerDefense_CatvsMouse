@@ -14,10 +14,12 @@ public class MenuNiveau {
 	
 	private JFrame frame;
 	private JPanel panel;
+	private JFrame frameMenuPrincipal;
 	
-	public MenuNiveau() {
+	public MenuNiveau(JFrame frameMenuPrincipal) {
 		this.frame = new JFrame("Tower Defense: Chat vs Souris"); // window
 		this.panel = new JPanel();
+		this.frameMenuPrincipal = frameMenuPrincipal;
 	}
 	
 	public void faireMenu() {
@@ -30,7 +32,8 @@ public class MenuNiveau {
         boutonNiveau1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // action à exécuter quand "Commencer" est cliqué
-                Niveau1 affJeu = new Niveau1();
+                Niveau1 niveau1 = new Niveau1(frameMenuPrincipal);
+                niveau1.afficheJeu();
                 frame.setVisible(false);
             }
         });
@@ -39,9 +42,8 @@ public class MenuNiveau {
         boutonMenuPrincipal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // action à exécuter quand "Commencer" est cliqué
-                MenuPrincipal menuPrincipal = new MenuPrincipal();
-                menuPrincipal.faireMenu();
-                frame.setVisible(false);
+                frameMenuPrincipal.setVisible(true); // remettre visible le menu principal
+                frame.setVisible(false); // mettre invisible le menu courrant
             }
         });
         

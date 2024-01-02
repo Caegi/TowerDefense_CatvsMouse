@@ -47,7 +47,7 @@ public class Plateau {
 		int posY = rand.nextInt(5);
 		int posX = 0;
 		int vitesseAT = 2500; // 1000 = 1 segonde
-		int vitesseDL = 7000; // 1000 = 1 segonde
+		int vitesseDL = 2000; // 1000 = 1 segonde
 		if (this.caseEstVide(posX, posY)) { 
 			Chat chat = new Chat(100, 15, posX, posY, vitesseAT, ("C"), vitesseDL); 
 			this.getCases() [0][posY] = new Case(chat);	
@@ -66,7 +66,7 @@ public class Plateau {
 		            	ref_p.genereChat();
 		            }
 		        }, 
-		        3000, vitesseGenChat 
+		        1000, vitesseGenChat 
 		);
 	}
 	
