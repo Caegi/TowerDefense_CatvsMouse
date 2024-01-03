@@ -5,28 +5,35 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.LayoutManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import jeu.Case;
 import jeu.Chat;
 import jeu.Plateau;
 import jeu.Tour;
 
 public class Niveau1 {
-	
+
 	private JFrame frame;
     private Plateau p;
 	private JPanel panelJeu;
-    private int vitesseGenChats = 5000; // 24 seg
+	private JPanel panelGeneral;
+	private JPanel panelLabels;
+    private int vitesseGenChats = 24000; // 24 seg
     private int argent = 50; // argent au début de la partie
     private int hauteur = 5;
 	private int largeur = 5;
 	private int vitesseGenArgent = 20000; // 20 seg
 	private JFrame frameMenuPrincipal;
-	
 	
 	public Niveau1(JFrame frameMenuPrincipal) {
 		this.frame = new JFrame("Tower Defense: Chat vs Souris"); 
@@ -34,14 +41,14 @@ public class Niveau1 {
 		this.p.genereChatContinu();
 		this.p.genereArgentContinu();
 		this.frameMenuPrincipal = frameMenuPrincipal;
+		this.panelGeneral = new JPanel(new BorderLayout());
+		this.panelLabels = new JPanel();
 	}
 	
 	public void afficheJeu() {
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int tailleCellule = 50;
-        this.frame.setSize(500, 500);
-        this.frame.setLocationRelativeTo(null);
-
+		
 		this.panelJeu = new JPanel() {
             private static final long serialVersionUID = 1L; // necessary for some reason
 			@Override
@@ -69,22 +76,46 @@ public class Niveau1 {
                 }
             }
         };
+        this.panelGeneral.add(panelJeu, BorderLayout.CENTER);
         
-        JLabel gameOverLabel = new JLabel();
-        gameOverLabel.setText("PV Maison " + p.getPvMaison() + "%");
-        gameOverLabel.setFont(gameOverLabel.getFont().deriveFont(10.0F));
-        gameOverLabel.setHorizontalAlignment(JLabel.LEFT);
-        panelJeu.add(gameOverLabel);
+        this.panelLabels.setLayout(new BoxLayout(this.panelLabels, BoxLayout.Y_AXIS));
         
-        panelJeu.setPreferredSize(new Dimension(500, 500));
-        this.frame.add(panelJeu);
+        // texte argent 
+        CustomJPanel labelArgent = new CustomJPanel("argent");
+        labelArgent.setText("Argent: " + p.getArgent());
+        labelArgent.setFont(labelArgent.getFont().deriveFont(14.0F));
+        this.panelLabels.add(labelArgent);
+        
+        // texte pv maison 
+        CustomJPanel labelPvMaison = new CustomJPanel("pvMaison");
+        labelPvMaison.setText("PV Maison: " + p.getPvMaison() + "%");
+        labelPvMaison.setFont(labelPvMaison.getFont().deriveFont(14.0F));
+        this.panelLabels.add(labelPvMaison);
+        
+        // ajouter une tour
+        this.panelJeu.addMouseListener((MouseListener) new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
+                // Calculer la cellule qui a été cliquée
+                int posX = e.getX() / tailleCellule;
+                int posY = e.getY() / tailleCellule;
+                
+                p.ajouteTour(posY, posX);
+            }
+        });
+        
+        this.panelGeneral.add(this.panelLabels, BorderLayout.SOUTH);
+        this.panelGeneral.setPreferredSize(new Dimension(400, 300));
+        
+        this.frame.add(this.panelGeneral);
         this.frame.pack(); // option pour l'affichage des elements dans panel soit faite correctement
         this.frame.setVisible(true);
         this.actualiserIgPlateauContinu();
 	}
 	
 	public void actualiserIgPlateauContinu() {
+		JPanel ref_panelLabels = this.panelLabels;
 		JPanel ref_panelJeu = this.panelJeu;
 		
 		new java.util.Timer().scheduleAtFixedRate( 
@@ -95,25 +126,28 @@ public class Niveau1 {
 		            		 GameOver gameOver = new GameOver(frameMenuPrincipal);
 		            		 gameOver.faireMenu();
 		                     frame.setVisible(false);
-		                   
 		                     cancel();
 						}
 		            	
 		            	SwingUtilities.invokeLater(() -> {
 			            	ref_panelJeu.repaint(); // actualiser la representation graphique du plateau
 			            	
-			            	for (Component jc : ref_panelJeu.getComponents()) {
-		                         if (jc instanceof JLabel) {
-		                             JLabel label = (JLabel) jc;
-		                             label.setText("PV Maison " + p.getPvMaison() + "%");
+			            	for (Component jc : ref_panelLabels.getComponents()) { // actualier pv maison
+		                         if ((jc instanceof CustomJPanel)) {
+		                        	 CustomJPanel label = (CustomJPanel) jc;
+		                             if (label.getId().equals("pvMaison")) {
+		                            	 label.setText("PV Maison " + p.getPvMaison() + "%");
+		                             }
+		                             else if (label.getId().equals("argent")){
+		                            	 label.setText("Argent: " + p.getArgent());
+		                             }
 		                         }
 		                     }
 		            	});
 		            }
 		        }, 
-		        0, 30  // affiche le plateau toutes les (vitesseAffichage / 1000) segondes
+		        0, 30  
 		);
     }
-	
 	
 }

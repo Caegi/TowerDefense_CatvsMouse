@@ -31,7 +31,7 @@ public class MenuNiveau {
         this.panel.add(boutonNiveau1);
         boutonNiveau1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // action à exécuter quand "Commencer" est cliqué
+                // action à exécuter quand "Niveau 1" est cliqué
                 Niveau1 niveau1 = new Niveau1(frameMenuPrincipal);
                 niveau1.afficheJeu();
                 frame.setVisible(false);
@@ -41,7 +41,7 @@ public class MenuNiveau {
         this.panel.add(boutonMenuPrincipal);
         boutonMenuPrincipal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // action à exécuter quand "Commencer" est cliqué
+                // action à exécuter quand "Menu Principal" est cliqué
                 frameMenuPrincipal.setVisible(true); // remettre visible le menu principal
                 frame.setVisible(false); // mettre invisible le menu courrant
             }

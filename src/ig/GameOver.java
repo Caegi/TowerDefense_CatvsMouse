@@ -31,9 +31,9 @@ public class GameOver {
         boutonRecommencer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // action à exécuter quand "Recommencer" est cliqué
-                Niveau1 newNiveau1 = new Niveau1(frameMenuPrincipal);
+                Niveau1 nvNiveau1 = new Niveau1(frameMenuPrincipal);
                 frame.setVisible(false);
-                newNiveau1.afficheJeu();
+                nvNiveau1.afficheJeu();
             }
         });
         
@@ -51,7 +51,7 @@ public class GameOver {
         boutonQuitter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // action à exécuter quand "Quitter" est cliqué
-                System.exit(0);
+                System.exit(0); // terminer programme
             }
         });
         

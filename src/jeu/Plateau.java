@@ -27,27 +27,29 @@ public class Plateau {
 		int vitesseAT = 6000;
 		int cout = 50;
 		Tour tour = new Tour(pV, aT, posX, posY, "T", vitesseAT, cout);
-		if ( (this.caseEstVide(posX, posY)) && (tour.getCout() <= this.getArgent()) ) {
-			getCases()[posX][posY] = new Case(tour);
-			Tour tourCree = (Tour) getCases()[posX][posY].getEntite();
-			tourCree.attaqueContinu(this);
-			this.setArgent(this.getArgent() - tour.getCout());
-		}
-		else if ( !(this.caseEstVide(posX, posY)) ) { // s'il y a une entite dans la case
-			System.out.println("Impossible, il y a " + getCases()[posX][posY].getEntite().getNom() + " dans la case");
-		}
-		else { // si le joueur n'a pas assez d'argent pour acheter la tour
-			System.out.println("Vous êtes trop pauvre");
-		}
+		if ( (posX < this.hauteur) && (posY < this.largeur) ) {
+			if ( (this.caseEstVide(posX, posY)) && (tour.getCout() <= this.getArgent()) ) {
+				getCases()[posX][posY] = new Case(tour);
+				Tour tourCree = (Tour) getCases()[posX][posY].getEntite();
+				tourCree.attaqueContinu(this);
+				this.setArgent(this.getArgent() - tour.getCout());
+			}
+			else if ( !(this.caseEstVide(posX, posY)) ) { // s'il y a une entite dans la case
+				System.out.println("Impossible, il y a " + getCases()[posX][posY].getEntite().getNom() + " dans la case");
+			}
+			else { // si le joueur n'a pas assez d'argent pour acheter la tour
+				System.out.println("Vous avez pas assez d'argent");
+			}
+		}	
 	}
 	
 	private void genereChat() {
 		// mettre chat dans une des 5 sources de chat
 		Random rand = new Random();
-		int posY = rand.nextInt(5);
+		int posY = rand.nextInt(5); // nombre au hazard entre 1 et 5
 		int posX = 0;
-		int vitesseAT = 2500; // 1000 = 1 segonde
-		int vitesseDL = 2000; // 1000 = 1 segonde
+		int vitesseAT = 2500; // 2,5 segondes
+		int vitesseDL = 7000; // 7 segondes
 		if (this.caseEstVide(posX, posY)) { 
 			Chat chat = new Chat(100, 15, posX, posY, vitesseAT, ("C"), vitesseDL); 
 			this.getCases() [0][posY] = new Case(chat);	
