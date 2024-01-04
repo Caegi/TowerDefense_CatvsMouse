@@ -5,16 +5,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import jeu.Case;
 import jeu.Chat;
@@ -28,12 +31,16 @@ public class Niveau1 {
 	private JPanel panelJeu;
 	private JPanel panelGeneral;
 	private JPanel panelLabels;
-    private int vitesseGenChats = 24000; // 24 seg
+    private int vitesseGenChats = 12000; // 12 seg
     private int argent = 50; // argent au début de la partie
     private int hauteur = 5;
 	private int largeur = 5;
-	private int vitesseGenArgent = 20000; // 20 seg
+	private int vitesseGenArgent = 12500; // 10 seg
 	private JFrame frameMenuPrincipal;
+    private ImageIcon imageTour = new ImageIcon("Tower.png");
+    private ImageIcon imageChat = new ImageIcon("Cat.png");
+    private ImageIcon imageMaison = new ImageIcon("MiceHouse.png");
+	private int tailleCellule = 55;
 	
 	public Niveau1(JFrame frameMenuPrincipal) {
 		this.frame = new JFrame("Tower Defense: Chat vs Souris"); 
@@ -47,8 +54,7 @@ public class Niveau1 {
 	
 	public void afficheJeu() {
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		int tailleCellule = 50;
-		
+				
 		this.panelJeu = new JPanel() {
             private static final long serialVersionUID = 1L; // necessary for some reason
 			@Override
@@ -60,17 +66,35 @@ public class Niveau1 {
                         int x = iRow * tailleCellule;
                         int y = iCol * tailleCellule;
 
-                        // Draw each cell based on your custom object properties
                         g.drawRect(x, y, tailleCellule, tailleCellule);
+                        
                         if (p.getCases()[iCol][iRow] != null) {
-                            // Customize drawing based on your object
+                        	
+                        	// mettre image de la Tour dans la cellule
                         	if (p.getCases()[iCol][iRow].getEntite() instanceof Tour) {
-                                g.setColor(Color.BLUE);
+                        		int dimensionTour =  ((p.getCases()[iCol][iRow].getEntite().getpV() * tailleCellule) / p.getCases()[iCol][iRow].getEntite().getMaxPV()); // taille de l'image depend des points de pv
+                        		Image imageTourRedimensione = imageTour.getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
+                                ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
+                                
+                        		// Calculer le centre pour un affichage centré
+                                int centreX = x + (tailleCellule - iconeTourRedimensione.getIconWidth()) / 2;
+                                int centreY = y + (tailleCellule - iconeTourRedimensione.getIconHeight()) / 2;
+                        		
+                        		iconeTourRedimensione.paintIcon(this, g, centreX, centreY);
                         	}
+                        	
+                        	// mettre image du Chat dans la cellule
                         	if (p.getCases()[iCol][iRow].getEntite() instanceof Chat) {
-                                g.setColor(Color.RED);
+                        		int dimensionChat = ((p.getCases()[iCol][iRow].getEntite().getpV() * tailleCellule) / p.getCases()[iCol][iRow].getEntite().getMaxPV()); // taille de l'image depend des points de pv
+                        		Image imageChatRedimensione = imageChat.getImage().getScaledInstance(dimensionChat, dimensionChat, Image.SCALE_SMOOTH);
+                                ImageIcon iconeChatRedimensione = new ImageIcon(imageChatRedimensione);
+                                
+                        		// Calculer le centre pour un affichage centré
+                                int centreX = x + (tailleCellule - iconeChatRedimensione.getIconWidth()) / 2;
+                                int centreY = y + (tailleCellule - iconeChatRedimensione.getIconHeight()) / 2;
+                        		
+                        		iconeChatRedimensione.paintIcon(this, g, centreX, centreY);
                         	}
-                            g.fillOval(x + 5, y + 5, tailleCellule - 10, tailleCellule - 10);
                         }
                     }
                 }
@@ -80,17 +104,20 @@ public class Niveau1 {
         
         this.panelLabels.setLayout(new BoxLayout(this.panelLabels, BoxLayout.Y_AXIS));
         
-        // texte argent 
-        CustomJPanel labelArgent = new CustomJPanel("argent");
-        labelArgent.setText("Argent: " + p.getArgent());
-        labelArgent.setFont(labelArgent.getFont().deriveFont(14.0F));
-        this.panelLabels.add(labelArgent);
+        JLabel houseLabel = new JLabel(this.imageMaison);
+        this.panelLabels.add(houseLabel);
         
         // texte pv maison 
         CustomJPanel labelPvMaison = new CustomJPanel("pvMaison");
         labelPvMaison.setText("PV Maison: " + p.getPvMaison() + "%");
-        labelPvMaison.setFont(labelPvMaison.getFont().deriveFont(14.0F));
+        labelPvMaison.setFont(labelPvMaison.getFont().deriveFont(16.0F));
         this.panelLabels.add(labelPvMaison);
+        
+        // texte argent 
+        CustomJPanel labelArgent = new CustomJPanel("argent");
+        labelArgent.setText("Argent: " + p.getArgent());
+        labelArgent.setFont(labelArgent.getFont().deriveFont(16.0F));
+        this.panelLabels.add(labelArgent);
         
         // ajouter une tour
         this.panelJeu.addMouseListener((MouseListener) new MouseAdapter() {
@@ -106,7 +133,7 @@ public class Niveau1 {
         });
         
         this.panelGeneral.add(this.panelLabels, BorderLayout.SOUTH);
-        this.panelGeneral.setPreferredSize(new Dimension(400, 300));
+        this.panelGeneral.setPreferredSize(new Dimension(this.tailleCellule * this.largeur, 510));
         
         this.frame.add(this.panelGeneral);
         this.frame.pack(); // option pour l'affichage des elements dans panel soit faite correctement
@@ -146,7 +173,7 @@ public class Niveau1 {
 		            	});
 		            }
 		        }, 
-		        0, 30  
+		        0, 100  
 		);
     }
 	

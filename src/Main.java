@@ -5,7 +5,7 @@ public class Main {
     
     public static void main(String[] args) {
     	
-    	// Version console
+//    	// Version console
 //    	int vitesseGenChats = 24000;
 //    	int argent = 50; // argent au début de la partie
 //    	int hauteur = 5;
@@ -20,6 +20,7 @@ public class Main {
 //        afC.afficheContinu(Niveau1);
 //        afC.lancerJeuCreationTours(Niveau1);
         
+    	// version Implementation Graphique
         MenuPrincipal menu = new MenuPrincipal();
         menu.faireMenu();
     	

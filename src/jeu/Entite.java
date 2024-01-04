@@ -8,9 +8,11 @@ public abstract class Entite {
 	private int posY;
 	private String nom;
 	private int vitesseAT;
+	private int maxPV;
 	
 	public Entite(int pV, int aT, int posX, int posY, String nom, int vitesseAT) {
 		this.setpV(pV);
+		this.setMaxPV(pV);
 		this.setAT(aT);
 		this.setPosX(posX);
 		this.setPosY(posY);
@@ -66,6 +68,14 @@ public abstract class Entite {
 
 	public void setVitesseAT(int vitesseAT) {
 		this.vitesseAT = vitesseAT;
+	}
+
+	public int getMaxPV() {
+		return maxPV;
+	}
+
+	public void setMaxPV(int maxPV) {
+		this.maxPV = maxPV;
 	}
 
 

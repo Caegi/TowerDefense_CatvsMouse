@@ -25,7 +25,7 @@ public class GameOver {
 	}
 	
 	public void faireMenu() {
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         JButton boutonRecommencer = new JButton("Recommencer");
         boutonRecommencer.addActionListener(new ActionListener() {

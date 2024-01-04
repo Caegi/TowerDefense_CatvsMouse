@@ -11,7 +11,7 @@ public class Tour extends Entite {
 
 	@Override
 	public void attaque(Plateau p) {
-		if (p.getCases()[this.getPosX()][this.getPosY()] != null) { // si Tour pas détruite
+		if ( (p.getCases()[this.getPosX()][this.getPosY()] != null) && (p.getCases()[this.getPosX()][this.getPosY()].getEntite() instanceof Tour) ) { // si Tour pas détruite
 			// itérer sur les rangées du plateau
 			for (int iRow = this.getPosX()-1; iRow>=0; iRow--){
 				Case cible = p.getCases() [iRow][this.getPosY()];
@@ -42,7 +42,8 @@ public class Tour extends Entite {
 		        new java.util.TimerTask() {
 		            @Override
 		            public void run() {
-		            	if (p_ref.getCases()[tour.getPosX()][tour.getPosY()] == null) {
+		            	if ( (p_ref.getCases()[tour.getPosX()][tour.getPosY()] == null) ||
+            				(p_ref.getCases()[tour.getPosX()][tour.getPosY()].getEntite() instanceof Chat) ) {
 		            		cancel();
 		            	}
 		            	tour.attaque(p_ref);

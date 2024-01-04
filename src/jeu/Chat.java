@@ -13,7 +13,7 @@ public class Chat extends Entite implements Cloneable {
 	@Override
 	// le chat attaque continuellent, s'il y a une tour devant lui
 	public void attaque(Plateau p) { 
-		if (p.getCases()[this.getPosX()][this.getPosY()] != null) { // si Chat pas détruit
+		if ( (p.getCases()[this.getPosX()][this.getPosY()] != null) && (p.getCases()[this.getPosX()][this.getPosY()].getEntite() instanceof Chat) ) { // si Entite est un Chat et il n'a pas été détruit
 			if ((this.getPosX() + 1) < p.getHauteur()) {
 				Case cible = p.getCases() [this.getPosX() + 1] [this.getPosY()];
 		    	if ( (cible != null) && (cible.getEntite() instanceof Tour) ) { // s'il y a une tour devant le chat
@@ -42,9 +42,11 @@ public class Chat extends Entite implements Cloneable {
 		            public void run() {
 		            	// s'il est dans la dernière rangée visible du plateau
 		            	// ou s'il a ete detruit
+		            	// ou s'il y a une tour où le chat devrait être
 		            	// -> arreter d'attaquer
 		            	if ( (chatQuiAT.getPosX() == p_ref.getHauteur()-1) ||
-		            			(p_ref.getCases()[chatQuiAT.getPosX()][chatQuiAT.getPosY()] == null)) { 
+		            			(p_ref.getCases()[chatQuiAT.getPosX()][chatQuiAT.getPosY()] == null) ||
+		            			(p_ref.getCases()[chatQuiAT.getPosX()][chatQuiAT.getPosY()].getEntite() instanceof Tour)) { 
 							cancel();
 						}
 		            	chatQuiAT.attaque(p_ref);
