@@ -1,6 +1,5 @@
 package enums;
 
-
 public enum TourQuiTireAlEnversEnum {
 	
 	POINTS_DE_VIE(75),

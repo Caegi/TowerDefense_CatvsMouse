@@ -1,58 +1,57 @@
 package controller;
 
+import enums.TourAttaqueTousLesChatsDansColonneEnum;
 import model.Case;
 import model.ChatData;
 import model.Entite;
 import model.PlateauData;
 import model.TourData;
 
-public class TourLogic {
+public class TourAttaqueTousLesChatsDansColonneLogic extends TourLogic{
 	
-	private TourData tourData;
-	
-	public TourLogic(TourData data) {
-		this.setTourData(data);
+	public TourAttaqueTousLesChatsDansColonneLogic(TourData data) {
+		super(data);
+		this.getTourData().setAttaque(TourAttaqueTousLesChatsDansColonneEnum.ATTAQUE.getValue());
 	}
 	
+	@Override
 	public void attaque(PlateauData plateauData) {
 		// si Tour pas détruite
 		if ( (plateauData.getCases()[this.getTourData().getPosX()][this.getTourData().getPosY()] != null) && 
 				(plateauData.getCases()[this.getTourData().getPosX()][this.getTourData().getPosY()].getEntite() instanceof TourData) ) { 
 			
 			// itérer sur les rangées du plateau
-			for (int iRow = this.getTourData().getPosX()-1; iRow>=0; iRow--){
+			for (int iRow = 0; iRow < 5; iRow++){ 
 				
 				// cible: case que la tour essaye d'attaquer
 				Case cible = plateauData.getCases() [iRow][this.getTourData().getPosY()];
-				int pointsDeVie = 0;
+				int pVChat = 0;
 				
 				// si il y a un chat dans la cible
 		    	if ( (cible != null) && (cible.getEntite() instanceof ChatData) ) {
 		    		Entite entiteCible = cible.getEntite();
-		    		pointsDeVie = entiteCible.getPointsDeVie();
-		    		// points de vie du chat après avoir été attaqué
-					int nouveauPointsDeVie = pointsDeVie - this.getTourData().getAttaque();
+		    		pVChat = entiteCible.getPointsDeVie();
+					int nouveauPointsDeVie = pVChat - this.getTourData().getAttaque();
 					
-					// si le chat n'a pas été éliminé
+		    		// points de vie du chat après avoir été attaqué
 					if (nouveauPointsDeVie > 0 ){
 						entiteCible.setPointsDeVie(nouveauPointsDeVie);
 					}
-					// si chat a été éliminé
-					else { 
+					
+					else { // si Chat meurt
 						plateauData.viderCase(iRow, this.getTourData().getPosY()); // actualiser cases
-						// actualiser compteur eliminés (pour le mode de jeu normal)
 						plateauData.setCompteurChatElimines( plateauData.getCompteurChatElimines() + 1 );
 					}
-					break; // sortie du for loop pour que la tour attaque seulement le premier chat qu'il trouve
 		    	}
 			}
 		}
-	}		
+	}
 	
+	@Override
 	public void attaqueContinu(PlateauData plateauData) {
 		int vitesseAttaque = this.getTourData().getVitesseAttaque();
 		TourData referenceTourData = this.getTourData();
-		TourLogic referenceTourLogic = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
+		TourAttaqueTousLesChatsDansColonneLogic referenceTourLogic = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
 		
 		new java.util.Timer().scheduleAtFixedRate( 
 		        new java.util.TimerTask() {
@@ -71,16 +70,7 @@ public class TourLogic {
 		            	referenceTourLogic.attaque(plateauData);
 		            }
 		        }, 
-		        1000, vitesseAttaque // // après 1 segonde, la tour attaque toutes les vitesseAttaque millisegondes
+		        1000, vitesseAttaque // après une segonde, la tour attaque toutes les vitesseAttaque millisegondes
 		);
 	}
-
-	public TourData getTourData() {
-		return tourData;
-	}
-
-	public void setTourData(TourData tourData) {
-		this.tourData = tourData;
-	}
-
 }

@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -21,6 +22,10 @@ import javax.swing.SwingUtilities;
 
 import controller.PlateauLogic;
 import enums.Niveau1Enum;
+import enums.TourAttaqueTousLesChatsDansColonneEnum;
+import enums.TourBouclierEnum;
+import enums.TourQuiTireAlEnversEnum;
+import enums.TourRapideEnum;
 import model.ChatData;
 import model.PlateauData;
 import model.TourData;
@@ -39,10 +44,11 @@ public class Niveau {
 	private int nombreDeChatsAEliminerAvanttVictoireModeNormal = Niveau1Enum.NOMBRE_CHAT_A_ELIMINER_AVANT_VICTOIRE_MODE_NORMAL.getValue();
     private ImageIcon imageTour = new ImageIcon("Tour.png");
     private ImageIcon imageChat = new ImageIcon("Cat.png");
-    private ImageIcon imageMaison = new ImageIcon("MiceHouse.png");
+    private ImageIcon imageMaison = new ImageIcon("MaisonSouris.png");
     private ImageIcon imageTourRapide = new ImageIcon("TourRapide.png");
     private ImageIcon imageTourBouclier = new ImageIcon("Bouclier.png");
-    private ImageIcon imageTourQuiTireAlEnvers = new ImageIcon("TowerQuiTireAlEnvers.png");
+    private ImageIcon imageTourQuiTireAlEnvers = new ImageIcon("TourQuiTireAlEnvers.png");
+    private ImageIcon imageTourAttaqueTousLesChatsDansColonne = new ImageIcon("TourAttaqueTousLesChatsDansColonne.png");
 	private final int tailleCase = 55; // indique les pixels de la largeur et la hauteur d'une case du plateau
 	// degreAugmentationStatsChats: les points de vie et l'attaque des chats est definie en fonction de la difficulte choisie par l'utilisateur (1 facile, 2 moyen, 3 difficile, voir enumDifficulte)
 	private int degreAugmentationStatsChats;
@@ -54,6 +60,7 @@ public class Niveau {
 	}
 	
 	public void afficheJeu(JFrame frame) {
+		
 		PlateauData plateauData = new PlateauData(this.getHauteur(), this.getLargeur(), this.getVitesseGenerationChat(), this.getArgent(), this.getVitesseGenerationArgent(), this.getDegreAugmentationStatsChats(), this.isModeNormal, this.getNombreDeChatsGenererAvantVictoireModeNormal());
 		this.setPlateauLogic(new PlateauLogic(plateauData));
 		this.getPlateauLogic().genereChatContinu();
@@ -79,10 +86,11 @@ public class Niveau {
         });
         
         // redimentioner la fenetre
-        // 330: taille du reste des elements a afficher (l'image de la maison, de la souris, les deux textes et les boutons)
-        this.getPanelGeneral().setPreferredSize(new Dimension(this.getTailleCase() * this.getHauteur(), this.getTailleCase() * this.getLargeur() + 330));
-        
+        // 345: taille du reste des elements a afficher (l'image de la maison, de la souris, les deux textes et les boutons)
+        this.getPanelGeneral().setPreferredSize(new Dimension(this.getTailleCase() * this.getHauteur(), this.getTailleCase() * this.getLargeur() + 345));
         frame.add(this.getPanelGeneral());
+        
+        frame.getContentPane().setBackground(new Color(139, 69, 19));
         frame.pack(); // option pour l'affichage des elements dans panel soit faite correctement
         this.actualiserIgPlateauContinu(frame);
 	}
@@ -102,6 +110,7 @@ public class Niveau {
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourRapide(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourBouclier(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourQuiTireAlEnvers(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(false);
             }
         });
         
@@ -113,6 +122,7 @@ public class Niveau {
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourRapide(true);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourBouclier(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourQuiTireAlEnvers(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(false);
             }
         });
         
@@ -124,10 +134,11 @@ public class Niveau {
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourRapide(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourBouclier(true);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourQuiTireAlEnvers(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(false);
             }
         });
         
-        JButton boutonTourQuiTireAlEnvers = new JButton("Ajouter Tour qui tire a l'envers");
+        JButton boutonTourQuiTireAlEnvers = new JButton("Ajouter Tour qui tire à l'envers");
         this.getPanelLabels().add(boutonTourQuiTireAlEnvers);
         boutonTourQuiTireAlEnvers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,6 +146,19 @@ public class Niveau {
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourRapide(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourBouclier(false);
                 plateauLogic.getPlateauData().setJoeurChoisiAjouterTourQuiTireAlEnvers(true);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(false);
+            }
+        });
+        
+        JButton boutonTourAttaqueTousLesChatsDansColonne = new JButton("Ajouter Tour qui penètre");
+        this.getPanelLabels().add(boutonTourAttaqueTousLesChatsDansColonne);
+        boutonTourAttaqueTousLesChatsDansColonne.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	plateauLogic.getPlateauData().setJoeurChoisiAjouterTourNormale(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourRapide(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourBouclier(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourQuiTireAlEnvers(false);
+                plateauLogic.getPlateauData().setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(true);
             }
         });
         
@@ -167,9 +191,26 @@ public class Niveau {
                         
                         if (getPlateauLogic().getPlateauData().getCases()[iCol][iRow] != null) {
                         	
-                        	// mettre image de la Tour qui tire a l'envers dans la case
+                        	// mettre image de la Tour qui tire sur tous les chats dans la colonne dans la case
                         	if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 10) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourAttaqueTousLesChatsDansColonneEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, cette tour a une attaque de 4
+                        		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
+                        		if (dimensionTour > 0) {
+                        			Image imageTourRedimensione = imageTourAttaqueTousLesChatsDansColonne.getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
+                        		    ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
+                                      
+                              		// Calculer le centre pour un affichage centré
+                                      int centreX = x + (getTailleCase() - iconeTourRedimensione.getIconWidth()) / 2;
+                                      int centreY = y + (getTailleCase() - iconeTourRedimensione.getIconHeight()) / 2;
+                              		
+                              		iconeTourRedimensione.paintIcon(this, g, centreX, centreY);
+                        		}
+                        	}
+                        	
+                        	// mettre image de la Tour qui tire a l'envers dans la case
+                        	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourQuiTireAlEnversEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, cette a une attaque de 0
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
                         				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
                         		if (dimensionTour > 0) {
@@ -186,7 +227,7 @@ public class Niveau {
                         	
                         	// mettre image de la TourBouclier dans la case
                         	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 0) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourBouclierEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
                         				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
                         		if (dimensionTour > 0) {
@@ -203,7 +244,7 @@ public class Niveau {
                         	
                         	// mettre image de la TourRapide dans la case
                         	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 1) ) { // au contraire de la tour normale, la tour qui attaque a une attaque de 1 au lieu de 6
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourRapideEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, cette tour a une attaque de 1 au lieu de 6
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
                         				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
                         		if (dimensionTour > 0) {
@@ -435,6 +476,10 @@ public class Niveau {
 
 	public ImageIcon getImageTourQuiTireAlEnvers() {
 		return imageTourQuiTireAlEnvers;
+	}
+
+	public ImageIcon getImageTourAttaqueTousLesChatsDansColonne() {
+		return imageTourAttaqueTousLesChatsDansColonne;
 	}
 
 

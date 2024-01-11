@@ -15,6 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import controller.PlateauLogic;
+import enums.TourAttaqueTousLesChatsDansColonneEnum;
+import enums.TourBouclierEnum;
+import enums.TourQuiTireAlEnversEnum;
+import enums.TourRapideEnum;
 import model.ChatData;
 import model.Pierre;
 import model.PlateauData;
@@ -58,8 +62,8 @@ public class NiveauAvecPierre extends Niveau {
             }
         });
         
-        // 330: taille du reste des elements a afficher (l'image de la maison, de la souris, les deux textes et les boutons)
-        this.getPanelGeneral().setPreferredSize(new Dimension(this.getTailleCase() * this.getHauteur(), this.getTailleCase() * this.getLargeur() + 330));
+        // 345: taille du reste des elements a afficher (l'image de la maison, de la souris, les deux textes et les boutons)
+        this.getPanelGeneral().setPreferredSize(new Dimension(this.getTailleCase() * this.getHauteur(), this.getTailleCase() * this.getLargeur() + 345));
         
         frame.add(this.getPanelGeneral());
         frame.pack(); // option pour l'affichage des elements dans panel soit faite correctement
@@ -82,11 +86,28 @@ public class NiveauAvecPierre extends Niveau {
                         if (getPlateauLogic().getPlateauData().getCases()[iCol][iRow] != null) {
                         	
                         	
-                        	// mettre image de la TourBouclier dans la case
+                        	// mettre image de la Tour qui tire sur tous les chats dans la colonne dans la case
                         	if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 10) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourAttaqueTousLesChatsDansColonneEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, cette tour a une attaque de 8
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
-                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image dépend des points de vie
+                        		if (dimensionTour > 0) {
+                        			Image imageTourRedimensione = getImageTourAttaqueTousLesChatsDansColonne().getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
+                        		    ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
+                                      
+                              		// Calculer le centre pour un affichage centré
+                                      int centreX = x + (getTailleCase() - iconeTourRedimensione.getIconWidth()) / 2;
+                                      int centreY = y + (getTailleCase() - iconeTourRedimensione.getIconHeight()) / 2;
+                              		
+                              		iconeTourRedimensione.paintIcon(this, g, centreX, centreY);
+                        		}
+                        	}
+                        	
+                        	// mettre image de la Tour qui tire à l'envers dans la case
+                        	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourQuiTireAlEnversEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
+                        		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image dépend des points de vie
                         		if (dimensionTour > 0) {
                         			Image imageTourRedimensione = getImageTourQuiTireAlEnvers().getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
                         		    ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
@@ -99,11 +120,11 @@ public class NiveauAvecPierre extends Niveau {
                         		}
                         	}
                         	
-                        	// mettre image de la TourBouclier dans la case
+                        	// mettre image de la Tour Bouclier dans la case
                         	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 0) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourBouclierEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, la tourBouclier a une attaque de 0
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
-                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image dépend des points de vie
                         		if (dimensionTour > 0) {
                         			Image imageTourRedimensione = getImageTourBouclier().getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
                         		    ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
@@ -116,11 +137,11 @@ public class NiveauAvecPierre extends Niveau {
                         		}
                         	}
                         	
-                        	// mettre image de la TourRapide dans la case
+                        	// mettre image de la Tour Rapide dans la case
                         	else if ( (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) && 
-                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == 1) ) { // au contraire de la tour normale, la tour qui attaque a une attaque de 1 au lieu de 6
+                        			(getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getAttaque() == TourRapideEnum.ATTAQUE.getValue()) ) { // au contraire de la tour normale, la tour qui attaque a une attaque de 1 au lieu de 6
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
-                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image dépend des points de vie
                         		if (dimensionTour > 0) {
                         			Image imageTourRedimensione = getImageTourRapide().getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
                         		    ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
@@ -134,10 +155,10 @@ public class NiveauAvecPierre extends Niveau {
                         	}
                         	
                         	
-                        	// mettre image de la Tour dans la case
+                        	// mettre image de la Tour Normale dans la case
                         	else if (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof TourData) {
                         		int dimensionTour = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) 
-                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de pv
+                        				/ getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image dépend des points de vie
                         		if (dimensionTour > 0) {
                         			Image imageTourRedimensione = getImageTour().getImage().getScaledInstance(dimensionTour, dimensionTour, Image.SCALE_SMOOTH);
                         			ImageIcon iconeTourRedimensione = new ImageIcon(imageTourRedimensione);
@@ -152,7 +173,8 @@ public class NiveauAvecPierre extends Niveau {
                         	
                         	// mettre image du Chat dans la case
                         	if (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof ChatData) {
-                        		int dimensionChat = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) / getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de vie
+                        		int dimensionChat = ((getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getPointsDeVie() * getTailleCase()) / 
+                        				getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite().getMaxPointsDeVie()); // taille de l'image depend des points de vie
                         		if (dimensionChat > 0) {
                         			Image imageChatRedimensione = getImageChat().getImage().getScaledInstance(dimensionChat, dimensionChat, Image.SCALE_SMOOTH);
                         			ImageIcon iconeChatRedimensione = new ImageIcon(imageChatRedimensione);
@@ -168,7 +190,7 @@ public class NiveauAvecPierre extends Niveau {
                         	
                         	// mettre image de la Pierre dans la case
                         	else if (getPlateauLogic().getPlateauData().getCases()[iCol][iRow].getEntite() instanceof Pierre) {
-                                ImageIcon imagePierre = new ImageIcon("Rock.png");
+                                ImageIcon imagePierre = new ImageIcon("Pierre.png");
                                 
                         		// Calculer le centre pour un affichage centré
                                 int centreX = x + (getTailleCase() - imagePierre.getIconWidth()) / 2;

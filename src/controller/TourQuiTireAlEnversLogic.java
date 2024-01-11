@@ -6,9 +6,9 @@ import model.Entite;
 import model.PlateauData;
 import model.TourData;
 
-public class TourAttaqueDernierChatColoneEnPremierLogic extends TourLogic {
+public class TourQuiTireAlEnversLogic extends TourLogic {
 
-	public TourAttaqueDernierChatColoneEnPremierLogic(TourData data) {
+	public TourQuiTireAlEnversLogic(TourData data) {
 		super(data);
 	}
 	
@@ -48,7 +48,7 @@ public class TourAttaqueDernierChatColoneEnPremierLogic extends TourLogic {
 	public void attaqueContinu(PlateauData plateauData) {
 		int vitesseAttaque = this.getTourData().getVitesseAttaque();
 		TourData referenceTourData = this.getTourData();
-		TourAttaqueDernierChatColoneEnPremierLogic referenceTourLogic = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
+		TourQuiTireAlEnversLogic referenceTourLogic = this; // pour que la tour qui attaque soit visible dans la classe anonyme de type Timer
 		
 		new java.util.Timer().scheduleAtFixedRate( 
 		        new java.util.TimerTask() {
@@ -67,7 +67,7 @@ public class TourAttaqueDernierChatColoneEnPremierLogic extends TourLogic {
 		            	referenceTourLogic.attaque(plateauData);
 		            }
 		        }, 
-		        1000, vitesseAttaque 
+		        1000, vitesseAttaque // après 1 segonde, la tour attaque toutes les vitesseAttaque millisegondes
 		);
 	}
 

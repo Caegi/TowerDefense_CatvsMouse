@@ -22,6 +22,7 @@ public class PlateauData {
 	private boolean joeurChoisiAjouterTourNormale = true; // initialise a true pour que l'utilisateur ajoute par defaut une tour normale
 	private boolean joeurChoisiAjouterTourBouclier = false; // initialise a false pour que l'utilisateur ajoute par defaut une tour normale
 	private boolean joeurChoisiAjouterTourQuiTireAlEnvers = false; // initialise a false pour que l'utilisateur ajoute par defaut une tour normale
+	private boolean joeurChoisiAjouterTourAttaqueTousLesChatsDansColonne = false;
 	
 	public PlateauData(int largeur, int hauteur, int vitesseGenerationChat, int argent, int vitesseGenerationArgent, int degreAugmentationStatsChats, boolean isModeNormal, int nombreDeChatsAEliminerAvantVictoireModeNormal) {
 		this.cases = new Case [hauteur][largeur];
@@ -143,7 +144,7 @@ public class PlateauData {
 
 	
 
-	public boolean leJoeurChoisiAjouterTourNormale() {
+	public boolean leJoeurChoisitAjouterTourNormale() {
 		return joeurChoisiAjouterTourNormale;
 	}
 
@@ -151,7 +152,7 @@ public class PlateauData {
 		this.joeurChoisiAjouterTourNormale = joeurChoisiAjouterTourNormale;
 	}
 
-	public boolean leJoeurChoisiAjouterTourBouclier() {
+	public boolean leJoeurChoisitAjouterTourBouclier() {
 		return joeurChoisiAjouterTourBouclier;
 	}
 
@@ -159,7 +160,7 @@ public class PlateauData {
 		this.joeurChoisiAjouterTourBouclier = joeurChoisiAjouterTourBouclier;
 	}
 
-	public boolean leJoeurChoisiAjouterTourRapide() {
+	public boolean leJoeurChoisitAjouterTourRapide() {
 		return joeurChoisiAjouterTourRapide;
 	}
 
@@ -174,6 +175,15 @@ public class PlateauData {
 	public void setJoeurChoisiAjouterTourQuiTireAlEnvers(
 			boolean joeurChoisiAjouterTourQuiTireAlEnvers) {
 		this.joeurChoisiAjouterTourQuiTireAlEnvers = joeurChoisiAjouterTourQuiTireAlEnvers;
+	}
+
+	public boolean leJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne() {
+		return joeurChoisiAjouterTourAttaqueTousLesChatsDansColonne;
+	}
+
+	public void setJoeurChoisiAjouterTourAttaqueTousLesChatsDansColonne(
+			boolean joeurChoisiAjouterTourAttaqueTousLesChatsDansColonne) {
+		this.joeurChoisiAjouterTourAttaqueTousLesChatsDansColonne = joeurChoisiAjouterTourAttaqueTousLesChatsDansColonne;
 	}
 
 
